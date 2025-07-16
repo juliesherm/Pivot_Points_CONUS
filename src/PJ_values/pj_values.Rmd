@@ -1,0 +1,310 @@
+---
+title: "PJ Values"
+author: "Julie Sherman"
+date: "2024-06-12"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pinyon-Juniper Value-Vulnerability Mapping
+
+This document is a case study for **Black Canyon of the Gunnison National Park**.
+
+
+```{r, echo = FALSE, include = FALSE}
+library(here)
+library(terra)
+library(stringr)
+library(ggplot2)
+library(tidyterra)
+library(ggpubr)
+library(splines)
+```
+
+```{r,  include = FALSE}
+source(here("src","PJ_values","park_ext.R"))
+
+#Read in park extent and boundary
+park<-"BLCA"
+park_extent<-park_ext(park,"extent")
+park_boundary<-park_ext(park,"boundary")
+
+#Read in values boundary
+value_polys <- terra::vect(here("raw_data", "NCPN_PJ_Values_2024.gdb"))
+value_polys<-subset(value_polys, value_polys$Park==park)
+value_polys <- terra::project(value_polys,crs(park_boundary))
+#ext(value_polys)
+#park_extent
+
+park_extent<-terra::union(ext(value_polys), park_extent)
+```
+
+First, see the pinyon - juniper dominated polygons identified by park experts as being the most, intermediate, and less valued for conservation.
+
+```{r, warning = FALSE}
+poly_plot<-ggplot()+theme_bw()+
+  geom_spatvector(data = value_polys, aes(col = ValueRate), fill = NA,lwd = 1) + scale_color_manual(values=c("orange", "red", "#56B4E9"))+
+  geom_spatvector(data = park_boundary, fill = NA, col = "lightgray",  lwd = 1)
+poly_plot
+
+```
+
+## Pivot Points
+
+Next, we look at the results of pivot point analysis across this park.
+
+Below find the p-values and r-squared values for each water balance variable
+
+```{r, echo = FALSE}
+piv_files<-list.files(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear"), pattern = "*_xint.tif", full.names = TRUE)
+
+slope_files<-list.files(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear"), pattern = "*_slope.tif", full.names = TRUE)
+
+
+rsq_files<-list.files(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear"), pattern = "*_rsq.tif", full.names = TRUE)
+
+
+pval_files<-list.files(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear"), pattern = "*_pval.tif", full.names = TRUE)
+
+pivs<-lapply(piv_files, terra::rast, win = park_extent)
+slopes<-lapply(slope_files, terra::rast, win = park_extent)
+rsqs<-lapply(rsq_files, terra::rast, win = park_extent)
+pvals<-lapply(pval_files, terra::rast, win = park_extent)
+names(pvals)<-str_split_i(pval_files,"_",-2)
+
+```
+
+```{r}
+accumswe<-ggplot()+theme_bw()+labs(title = "p-value accumswe")+geom_spatraster(data = pvals[["accumswe"]])+scale_fill_gradient(limits = c(0,0.1))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+aet<-ggplot()+theme_bw()+labs(title = "p-value aet")+geom_spatraster(data = pvals[["aet"]])+scale_fill_gradient(limits = c(0,0.1))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+rain<-ggplot()+theme_bw()+labs(title = "p-value rain") + geom_spatraster(data = pvals[["rain"]]) + scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+tavg<-ggplot()+theme_bw()+labs(title = "p-value tavg") + geom_spatraster(data = pvals[["tavg"]])+scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE) + scale_color_manual(values = c("orange", "red", "#56B4E9"))
+
+tmin<-ggplot()+theme_bw()+labs(title = "p-value tmin") + geom_spatraster(data = pvals[["tmin"]])+scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE) + scale_color_manual(values = c("orange", "red", "#56B4E9"))
+tmax<-ggplot()+theme_bw()+labs(title = "p-value tmax") + geom_spatraster(data = pvals[["tmax"]])+scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE) + scale_color_manual(values = c("orange", "red", "#56B4E9"))
+
+deficit<-ggplot()+theme_bw()+labs(title = "p-value deficit") + geom_spatraster(data = pvals[["deficit"]])+scale_fill_gradient(limits = c(0,0.1))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+pet<-ggplot()+theme_bw()+labs(title = "p-value pet") + geom_spatraster(data = pvals[["pet"]])+scale_fill_gradient(limits = c(0,0.1))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+soilwater<-ggplot()+theme_bw()+labs(title = "p-value soilwater") + geom_spatraster(data = pvals[["soilwater"]])+scale_fill_gradient(limits = c(0,0.1))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))
+
+runoff<-ggplot()+theme_bw()+labs(title = "p-value runoff") + geom_spatraster(data = pvals[["runoff"]])+scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE) + scale_color_manual(values = c("orange", "red", "#56B4E9"))
+
+precip<-ggplot()+theme_bw()+labs(title = "p-value precip") + geom_spatraster(data = pvals[["precip"]])+scale_fill_gradient(limits = c(0,0.1)) +
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE) + scale_color_manual(values = c("orange", "red", "#56B4E9"))
+
+ggpubr::ggarrange(accumswe,aet,deficit, pet,precip,rain,runoff,soilwater, tmax,tmin,tavg, ncol = 4,nrow = 3, common.legend = TRUE)
+```
+
+The regression with the highest $R^2$ for each pixel is shown below.
+
+```{r, echo=FALSE}
+#### Read in rsquares and p-values
+best<-terra::rast(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear","best_r2.tif"),win = park_extent)
+
+best_sig<-terra::rast(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear","best_r2_sig.tif"),win = park_extent)
+```
+
+
+Across the whole landscape:
+```{r, echo=FALSE}
+
+##plot best fit
+## define colors  for the water balance variables
+cols = c("cadetblue1", "chartreuse2","goldenrod1","chartreuse3","cadetblue2","cadetblue3","cadetblue4","cadetblue",
+         "coral1","coral2","coral3")
+#c("accumswe", "aet", "deficit", "pet","precip","rain","runoff", "soilwater","tavg","tmax","tmin")
+#water availability (P, SM, RAIN, SNOW) - cadetblues
+#water use (PET, AET)
+#water need (CWD)
+#temperature (GDD, TAVG)
+best<-as.factor(best)
+best_sig<-as.factor(best_sig)
+
+coltb <- data.frame(value=0:10, col=cols)
+coltb<-rbind(coltb, data.frame(value = 12,col = "lightgrey"))
+coltab(best)<-coltb
+coltab(best_sig)<-coltb
+```
+
+```{r, echo = FALSE}
+##plot best r2 maps
+all_best<-ggplot()+ theme_bw() +
+  labs(x="", y = "")+
+  geom_spatraster(data = best_sig , aes(fill = best_r2_sig))+
+  scale_fill_coltab(data = best_sig,labels = c("accumswe", "aet", "deficit", "pet","precip","rain","runoff","soilwater", "tavg","tmax","tmin"))+
+  geom_spatvector(data = value_polys,aes(color = ValueRate), fill = NA, linewidth = 1, show.legend = TRUE)+ scale_color_manual(values=c("orange", "red", "#56B4E9"))#+  
+#  geom_text(aes(x=xFromCol(best_sig, cl), y = yFromRow(best_sig, rw)), label = "*")
+all_best
+```
+
+
+Within the identified polygons, the relationships with the highest $R^2$  are summarized in the following table:
+
+```{r}
+#value_polys$best_model_poly<-terra::extract(best['which.max'], value_polys, "mode")$which.max
+best_counts<-terra::extract(best_sig['best_r2'], value_polys, table)
+#combine from both EVI and SAVI on same water balance variable
+names(best_counts)<-c("ID", "accumswe","aet", "deficit","pet","precip","rain","runoff","soilwater","tavg","tmax","tmin")
+best_counts<-data.frame(lapply(best_counts, as.numeric))
+best_counts[dim(best_counts)[1]+1,]<-colSums(best_counts)
+print("Number of polygons with WB having the maximum number of  pixelsof highest R2")
+best_counts$best_mod<-colnames(best_counts[,2:12])[apply(best_counts[,2:12],1,which.max)]
+#best_counts
+table(best_counts$best_mod[1:23])
+print("Number of significant pixels with WB having the maximum number of significant pixels")
+best_counts[24,]
+```
+
+
+
+
+## Future Vulnerability
+
+Choose a variable to assess the predicted values relative to the pivot point until the end of the century.
+
+```{r, echo = FALSE, warning=FALSE}
+vul_var<-"deficit"
+rcp<-"rcp45"
+future<-terra::rast(here("results","CONUS","future_comparison", paste0(rcp,"_",vul_var,"_total.tif")), win = park_extent)
+mods = read.csv(here("results","CONUS","future_comparison",
+                     paste0(rcp,"_",vul_var,"_files.txt")),
+                header = FALSE)[,1]
+mods = stringr::str_split_i(mods,"/",-1)
+mods = stringr::str_split_i(mods,"_",1)
+names(future)<-mods
+
+
+sig_mask<-terra::rast(here("results","CONUS","pivot_pts","window_14days","cutoff_2.5","bilinear", paste0("SAVI_",vul_var,"_pval.tif")),  win = park_extent)
+future<-future/72
+#print("Masking to Signficant Relationships")
+future_sig<-mask(future,sig_mask>0.1, maskvalue=TRUE,updatevalue = NA)
+```
+
+Plot
+```{r}
+plot(future,col = rev(RColorBrewer::brewer.pal(n = 72, name = "RdBu")), range = c(0,1))
+plot(value_polys,  add = TRUE)
+
+plot(future_sig,col = rev(RColorBrewer::brewer.pal(n = 72, name = "RdBu")), range = c(0,1))
+#plot(value_polys,  add = TRUE, col = "green", lwd = 1)
+
+#ggplot()+theme_bw()+
+#  geom_spatraster(data=future, )
+
+```
+
+
+## Pinyon-Juniper Values
+
+Read  in the value scores assigned by park experts
+```{r, echo = FALSE}
+##
+```
+
+
+Each polygon has the following expected futures
+```{r}
+#### Create combined value-sensitivity score
+#mean sensitivity per polygon
+#value_polys$best_model_poly<-terra::extract(best['which.max'], value_polys, mode)$which.max
+#value_polys$avsensitivity<-terra::extract(best["slope"], value_polys, fun = "mean", na.rm = TRUE)$slope
+#value_polys$numcells<-terra::extract(best["slope"], value_polys, fun = "mean", na.rm = TRUE)$slope
+#value_polys$avrsq<-terra::extract(best["r.squared"], value_polys, fun = "mean", na.rm = TRUE)$slope
+#value_polys$ValueRate<-as.numeric(stringr::str_split_i(value_polys$ValueRate," ",1))
+
+#value_polys$score<-(value_polys$ValueRate)^1*(1-value_polys$sensitivity/(value_polys$ValueRate/2.5)^(1/10))*3
+
+```
+
+
+```{r, include=FALSE}
+##plot time series
+#find which tile(s) the  park is in
+source(here("src","tile_extents.R"))
+park_tiles<-tile_exts(park_extent)
+#choose a pixel
+
+#read in historical wb
+historic<-lapply(park_tiles, function(x){ terra::rast(here("results","CONUS","wb_proj","wateryear","bilinear","tiled",paste0("V_1_5_wateryears_gridmet_historical_",vul_var,"_resampled_",x[1],"_",x[2],".tif")), win = park_extent)})
+historic<-Reduce(terra::merge,historic)
+#read in future wbs
+rcp = "rcp45"
+#mods<-list.files(here("results","CONUS","wb_proj","futures","tiled"),pattern = paste0("*_",rcp,"_",vul_var,"_",x[1],"_",x[2],".tif"))
+#mods = c("BNU-ESM", "CanESM2")
+future<-list()
+for(mod  in mods){
+  future[[length(future)+1]]<-lapply(park_tiles, function(x){ terra::rast(here("results","CONUS","wb_proj","futures","tiled",paste0("V_1_5_annual_",mod, "_",rcp,"_",vul_var,"_",x[1],"_",x[2],".tif")), win = park_extent)})
+  future[[length(future)]]<-Reduce(terra::merge,future[[length(future)]])
+#  lines(seq(25,24+length(unlist(future[1,1,]))),unlist(future[1,1,]), col = "blue")
+}
+```
+Now, plot
+
+```{r, include=FALSE}
+#choose a cell to look at that is in one of the polygons
+set.seed(32233)
+######fix best!!
+cell_choices<-cells(best, value_polys)
+rand_cell<-sample(1:nrow(cell_choices),1)
+rw<-rowFromCell(best, cell_choices[rand_cell,2])
+cl<-colFromCell(best, cell_choices[rand_cell,2])
+#rw = 1658
+#cl = 3
+```
+
+```{r}
+
+##plot
+all_ts<-c(unlist(historic[rw,cl,]),unlist(future[[1]][rw,cl,]))
+
+plot(seq(2000,1999+length(all_ts)),all_ts, type = "l", ylim = c(1000,7000), col = alpha("blue", 0.7), ylab = vul_var, xlab = "", main = rcp)
+
+for(i in 2:length(future)){
+  all_ts<-c(unlist(historic[rw,cl,]),unlist(future[[i]][rw,cl,]))
+  lines(seq(2000,1999+length(all_ts)),all_ts, col =  alpha("blue", 0.7))
+
+}
+lines(seq(2000,2023),unlist(historic[rw,cl,]),col = "black", lwd = 2)
+
+#add pivot point line
+abline(h = mean(unlist(historic[rw,cl,])), col = "red")
+abline(v = 2023, col = "black", lty = 2)
+
+
+```
+
+## Value-Vulnerability Map
+
+Finally, plot  the vulnerability scores  against values to determine an appropriate management  approach in the "resist, accept, direct" framework.
+
+```{r, echo = FALSE}
+#### Plot in value-sensitivity plane
+vulnerability <-rep(seq(0,1, length.out = 1000),3)
+value<-rep(1:3, each = 1000)
+ggplot(mapping = aes(vulnerability, value, fill = (value)^1*(1-vulnerability/(value/2.5)^(1/10))*3))+
+  geom_tile()+theme_bw()+ylab("value score")+
+  scale_x_continuous("vulnerability", breaks = c(0,0.5,1),labels =  c("least","","most"))+
+  scale_fill_gradient(low = "white", high = "red",breaks = c(1,4.5,8),
+                      labels = c("accept", "direct", "resist"))+
+  guides(fill = guide_colourbar(barwidth = 0.5, barheight = 10,
+                                title = ""))
+
+```
