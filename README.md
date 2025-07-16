@@ -14,13 +14,19 @@ B. [modis_yr_stack_tile.sh](src/modis_yr_stack_tile.sh) converts raw data to mul
 
 A. gridmet_processor.py resamples waterbalance data to match MODIS resolution
 
+
+
 ## Define growing season
+
+A. start_end_gs_CONUS.py
 
 
 
 ## Calculate cummulative annual vegetation production
 
 A. [vi_smooth_tiles.py](src/vi_smooth_tiles.py) smooths, gap-fills and integrates over the growing season for each year/tile to obtain annual vegetation summary.
+
+
 
 
 ## Calculate pivot points
