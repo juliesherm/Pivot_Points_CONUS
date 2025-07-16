@@ -4,7 +4,7 @@ Returns tiled pivot points and other values from the simple linear regression
 
 Computes quickly using vectorized functions - based on https://stackoverflow.com/questions/52108417/how-to-apply-linear-regression-to-every-pixel-in-a-large-multi-dimensional-array
 Utilizes multiple cores via parallelization
-!! WARNING !! Parallelization doesn't work on AWS (yet) - instead use manual loops at the bottom of the script
+!! WARNING !! Parallelization doesn't work on all servers - can instead use manual loops at the bottom of the script
 
 Created on Mon Mar 18 2024
 Modified April 3, 2024
@@ -75,7 +75,7 @@ def fast_pivs(vi_gs, wb_wy):
     print("Saving")
     output_file = os.path.join(pivs_tile_path, 'pivs_{vi}_{wb}_{xoff}_{yoff}.tif'.format(vi = VI,wb = wb_var, xoff = xoff, yoff = yoff))
     with rasterio.open(output_file, 'w', **meta) as dst:
-        dst.descriptions = tuple(['y-intercept', 'slope', 'x-intercept','rsqaured','pvalue','stderr','n'])
+        dst.descriptions = tuple(['y-intercept', 'slope', 'x-intercept','rsquared','pvalue','stderr','n'])
         dst.write(result)
     en = time.time()
     print(en-st)
