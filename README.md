@@ -20,12 +20,12 @@ A. gridmet_processor.py resamples waterbalance data to match MODIS resolution
 
 ## 4. Calculate cummulative annual vegetation production
 
-A. vi_smooth_tiles.py smooths, gap-fills and integrates over the growing season for each year/tile to obtain annual vegetation summary.
+A. [vi_smooth_tiles.py](src/vi_smooth_tiles.py) smooths, gap-fills and integrates over the growing season for each year/tile to obtain annual vegetation summary.
 
 
 ## 3. Calculate pivot points
 
-A. pivot_tiles.py calculates pivot points from tiled yearly waterbalance and iEVI data (which is also centered during this script)
+A. [pivot_tiles.py](src/pivot_tiles.py) calculates pivot points from tiled yearly waterbalance and iEVI data (which is also centered during this script)
 
 
 ## 4. Predict future VI using pivot points and water balance projections
@@ -34,6 +34,6 @@ A. pivot_tiles.py calculates pivot points from tiled yearly waterbalance and iEV
 
 ## 5. Create metrics to summarize future VI projections
 
-A. compare_future.py
+A. [compare_future.py](src/compare_future.py)
 
 ## 6. Plotting
