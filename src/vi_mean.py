@@ -1,8 +1,5 @@
 """
-Takes tiled waterbalance or gridmet data and regresses onto integrated, centered vegetation indicies for every pixel
-Returns tiled pivot points and other values from the simple linear regression
-
-Computes quickly using vectorized functions - based on https://stackoverflow.com/questions/52108417/how-to-apply-linear-regression-to-every-pixel-in-a-large-multi-dimensional-array
+Computes mean historical iEVI and saves using tiled data by averaging over bands (years) 
 Utilizes multiple cores via parallelization
 !! WARNING !! Parallelization doesn't work on AWS (yet) - instead use manual loops at the bottom of the script
 
