@@ -1,7 +1,0 @@
-#copy this into AWS command line to download data
-#from julie's website to current directory
-
-wget -r -np http://math.utah.edu/~sherman/pivot_pts/results/CONUS/pivot_pts/window_14days/cutoff_2.5/bilinear/tiled/ -nH  --cut-dirs=10
-
-wget -r -np http://math.utah.edu/~sherman/pivot_pts/results/CONUS/integrated_vi_gs/window_14days_cutoff_2.5/bilinear/SAVI/ -nH  --cut-dirs=9
-
