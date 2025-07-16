@@ -12,10 +12,11 @@ The workflow for this project is approximately as follows:
 ## Download and process water balance data
 
 - gridmet_processor.py resamples waterbalance data to match MODIS resolution
+- 
 
 ## Download and process temperature and precipitation data
 
-- gridmet_processor.py resamples waterbalance data to match MODIS resolution
+- 
 
 
 
