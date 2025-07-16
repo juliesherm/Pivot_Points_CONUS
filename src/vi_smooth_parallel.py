@@ -1,6 +1,6 @@
 '''
 SAME AS vi_smooth_tiles.py except that computations are parallelized by running each tile on different cores
-!! WARNING !! Parallelization yet to succeed on AWS
+!! WARNING !! Parallelization as implemented doesn't work on all servers
 Designed for tiled CONUS VI data (use modis_yr_stack_tile.sh to create from raw MODIS data)
 From raw MODIS VI data for each year, processes and computes the integrated VI value over the growing season
  - masks with MODIS reliability data
