@@ -7,7 +7,7 @@ The workflow for this project is approximately as follows:
 
 A. Download MODIS VI and Rely data files
 
-B. modis_yr_stack_tile.sh converts raw data to multibanded tiff 'tiles'. Each tiff file covers 1 year and 1/15 spatial tile over CONUS. Each band is one of the 16-day composite values.
+B. [modis_yr_stack_tile.sh](src/modis_yr_stack_tile.sh) converts raw data to multibanded tiff 'tiles'. Each tiff file covers 1 year and 1/15 spatial tile over CONUS. Each band is one of the 16-day composite values.
 
 
 ## 2. Download and process water balance data
