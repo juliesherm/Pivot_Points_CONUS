@@ -52,12 +52,9 @@ The workflow for this project is approximately as follows:
 
 ## Predict future VI using pivot points and water balance projections
 
-Note that future, yearly VI projections are never explictly calculated/saved for reasons of storage space. Instead, future values of water balance variables are compared to the pivot points directly to produced summary values as described in the next section. Using the `magnitude' option in the compare_future file allows direct computation of VI projections, but it is subsequently summed over the mid- or end-century periods
+Note that future, yearly VI projections are never explictly calculated/saved for reasons of storage space. Instead, future values of water balance variables are compared to the pivot points directly to produced summary values. Using the `magnitude' option in the compare_future file allows direct computation of VI projections, but it is subsequently summed over the mid- or end-century periods
 
-
-## Create metrics to summarize future VI projections
-
-- [compare_future.py](src/compare_future.py)
+- [compare_future.py](src/compare_future.py) creates metrics to summarize future VI projections in relation to the pivot points   
 
 
 ## Analysis of results
