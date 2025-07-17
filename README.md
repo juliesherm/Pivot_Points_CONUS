@@ -34,6 +34,8 @@ The workflow for this project is approximately as follows:
 ## Calculate cummulative annual vegetation production
 
 - [vi_smooth_tiles.py](src/vi_smooth_tiles.py) smooths, gap-fills and integrates over the growing season for each year/tile to obtain annual vegetation summary.
+- [int_vi_yr_stack.sh](src/int_vi_yr_stack.sh) combines yearly integrated VI into single file. Each file is one tile with bands corresponding to years (2001--2023)
+
 
 
 
