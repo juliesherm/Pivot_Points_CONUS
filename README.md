@@ -69,5 +69,5 @@ Note that future, yearly VI projections are never explictly calculated/saved for
 - [avg_tmin_tmax.sh](src/avg_tmin_tmax.sh) calculates the average between tmin and tmax daily temps (although I believe the T_avg variable was ultimately dropped from analysis)
 - [range_tiles.py](src/range_tiles.py) calculates the range of the given waterbalance data
 - There are several shell functions that were used to tile/untile various variables. For instance:
--- [pivs_CONUS.sh](src/pivs_CONUS.sh) combines pivot point output tiles for a given VI/WB pair and output variable of interest (intercept, slope, rsquared, etc)
+  - [pivs_CONUS.sh](src/pivs_CONUS.sh) combines pivot point output tiles for a given VI/WB pair and output variable of interest (intercept, slope, rsquared, etc)
 
