@@ -1,6 +1,11 @@
 # Pivot_Points_CONUS
 Scripts used to create and analyze pivot points for the continental United States. 
 
+Much of the data and methods for this work is inspired by  
+ -  Landscape pivot points and responses to water balance in national parks of the southwest US by Thoma, Munson, and Witwicki [https://doi.org/10.1111/1365-2664.13250](https://doi.org/10.1111/1365-2664.13250)
+ -  Robust projections and consequences of an expanding bimodal growing season in the western United States by Tercek, Gross, and Thoma [https://doi.org/10.1002/ecs2.4530](https://doi.org/10.1002/ecs2.4530)
+
+
 The workflow for this project is approximately as follows:
 
 ## Download and process MODIS data
@@ -16,7 +21,7 @@ The workflow for this project is approximately as follows:
 
 ## Download and process temperature and precipitation data
 
-- gridmet_processor.py projects to MODIS resolution/CRS
+- gridmet_processor.py resamples gridMET data to match to MODIS resolution/CRS
 - [gm_wateryear_average.py](src/gm_wateryear_average.py) calculates the wateryear (October-September) average for gridmet data
 - [gm_yr_stack_tile.sh](src/gm_yr_stack_tile.sh) converts projected wateryear average to multibanded tiff 'tiles'. Each tiff file covers all years and 1/15 spatial tile over CONUS. Each band is one year.
 
