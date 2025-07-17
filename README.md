@@ -1,7 +1,7 @@
 # Pivot_Points_CONUS
 Scripts used to create and analyze pivot points for the continental United States. 
 
-Much of the data and methods for this work is inspired by  
+Data and methods for this work is heavily inspired by  
  -  Landscape pivot points and responses to water balance in national parks of the southwest US by Thoma, Munson, and Witwicki [https://doi.org/10.1111/1365-2664.13250](https://doi.org/10.1111/1365-2664.13250)
  -  Robust projections and consequences of an expanding bimodal growing season in the western United States by Tercek, Gross, and Thoma [https://doi.org/10.1002/ecs2.4530](https://doi.org/10.1002/ecs2.4530)
 
