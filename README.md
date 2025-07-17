@@ -55,11 +55,13 @@ Note that future, yearly VI projections are never explictly calculated/saved for
 
 ## Analysis of results
 
+### Assess results by land classification
+- [project_nlcd.R](src/project_nlcd.R) projects NLCD data to match MODIS CRS/resolution. Also contains plotting functionality for the NLCD data 
 - [sig_table.R](src/sig_table.R) creates a table of the proportion of significant pixels by independent WB predictor and land class (from NLCD) 
 
 
 
-## Plotting
+### Plotting
 
 - [plot_gs.R](src/plot_gs.R) plots the growing season for CONUS or for BLCA
 
