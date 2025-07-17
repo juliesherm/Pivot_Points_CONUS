@@ -16,7 +16,7 @@ The workflow for this project is approximately as follows:
 
 ## Download and process temperature and precipitation data
 
-- projects to MODIS resolution/CRS
+- gridmet_processor.py projects to MODIS resolution/CRS
 - [gm_wateryear_average.py](src/gm_wateryear_average.py) calculates the wateryear (October-September) average for gridmet data
 - [gm_yr_stack_tile.sh](src/gm_yr_stack_tile.sh) converts projected wateryear average to multibanded tiff 'tiles'. Each tiff file covers all years and 1/15 spatial tile over CONUS. Each band is one year.
 
@@ -67,5 +67,5 @@ Note that future, yearly VI projections are never explictly calculated/saved for
 - [avg_tmin_tmax.sh](src/avg_tmin_tmax.sh) calculates the average between tmin and tmax daily temps (although I believe the T_avg variable was ultimately dropped from analysis)
 - [range_tiles.py](src/range_tiles.py) calculates the range of the given waterbalance data
 - There are several shell functions that were used to tile/untile various variables. For instance:
-- - [pivs_CONUS.sh](src/pivs_CONUS.sh) combines pivot point output tiles for a given VI/WB pair and output variable of interest (intercept, slope, rsquared, etc)
+-- [pivs_CONUS.sh](src/pivs_CONUS.sh) combines pivot point output tiles for a given VI/WB pair and output variable of interest (intercept, slope, rsquared, etc)
 
